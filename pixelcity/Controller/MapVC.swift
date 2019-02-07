@@ -8,6 +8,8 @@
 
 import UIKit
 import MapKit
+import Alamofire
+import AlamofireImage
 
 class MapVC: UIViewController , UIGestureRecognizerDelegate{
     @IBOutlet weak var mapView: MKMapView!
@@ -20,6 +22,7 @@ class MapVC: UIViewController , UIGestureRecognizerDelegate{
     
     var flowLayout = UICollectionViewFlowLayout()
     var screenSize = UIScreen.main.bounds
+    var imageURLArray = [String]()
     
     let authorizationStatus = CLLocationManager.authorizationStatus()
     let regionRadius: Double = 1000
@@ -32,7 +35,7 @@ class MapVC: UIViewController , UIGestureRecognizerDelegate{
         locationManager.delegate = self
         configureLocationServices()
         locationManager.startUpdatingLocation()
-
+        
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: flowLayout)
         collectionView?.register(PhotoCell.self, forCellWithReuseIdentifier: "photoCell")
         collectionView?.delegate = self
@@ -105,6 +108,21 @@ class MapVC: UIViewController , UIGestureRecognizerDelegate{
             centerMapOnUserLocation()
         }
     }
+    func retriveUrls(forAnnotation annotation:DroppablePin, handler: @escaping (_ status: Bool)->()){
+        imageURLArray = []
+        Alamofire.request(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, andNumberOfPhotos: 10)).responseJSON { (response) in
+            guard let json =  response.result.value as? Dictionary<String, AnyObject> else{return}
+            let photosDict = json["photos"] as! Dictionary<String, AnyObject>
+            let photoDictArray = photosDict["photo"] as! [Dictionary<String, AnyObject>]
+            for photo in photoDictArray{
+                let postUrl = "https://farm\(photo["farm"]!).staticflickr.com/\(photo["server"]!)/\(photo["id"]!)_\(photo["secret"]!)_z_d.jpg"
+                self.imageURLArray.append(postUrl)
+            }
+            handler(true)
+        }
+    }
+//    https://farm5.staticflickr.com/4816/33100953128_4816_k_d.jpg
+    
     
 }
 extension MapVC : MKMapViewDelegate{
@@ -136,6 +154,9 @@ extension MapVC : MKMapViewDelegate{
         let touchCoordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
         let annotation = DroppablePin(coordinate: touchCoordinate, identifier: "droppablePin")
         mapView.addAnnotation(annotation)
+        retriveUrls(forAnnotation: annotation) { (success) in
+            print(self.imageURLArray)
+        }
         
         let coordinateRegion = MKCoordinateRegion.init(center: touchCoordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
         mapView.setRegion(coordinateRegion, animated: true)
@@ -172,7 +193,7 @@ extension MapVC : UICollectionViewDataSource, UICollectionViewDelegate{
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var cell:  PhotoCell  = ((collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell)!)
+        let cell:  PhotoCell  = ((collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as? PhotoCell)!)
         return cell
     }
     
