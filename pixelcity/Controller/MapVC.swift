@@ -41,7 +41,7 @@ class MapVC: UIViewController , UIGestureRecognizerDelegate{
         collectionView?.register(PhotoCell.self, forCellWithReuseIdentifier: "photoCell")
         collectionView?.delegate = self
         collectionView?.dataSource = self
-        collectionView?.backgroundColor = #colorLiteral(red: 0.6666666865, green: 0.6666666865, blue: 0.6666666865, alpha: 1)
+        collectionView?.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         pullUpView.addSubview(collectionView!)
     }
@@ -83,7 +83,7 @@ class MapVC: UIViewController , UIGestureRecognizerDelegate{
         let xPoint =  (screenSize.width / 2) - (spinner?.frame.width)!/2
         spinner?.center = CGPoint(x: xPoint, y: 150)
         spinner?.style = .whiteLarge
-        spinner?.color = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        spinner?.color = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         spinner?.startAnimating()
         collectionView!.addSubview(spinner!)
     }
@@ -111,7 +111,7 @@ class MapVC: UIViewController , UIGestureRecognizerDelegate{
         }
     }
     func retriveUrls(forAnnotation annotation:DroppablePin, handler: @escaping (_ status: Bool)->()){
-        Alamofire.request(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, andNumberOfPhotos: 10)).responseJSON { (response) in
+        Alamofire.request(flickrUrl(forApiKey: API_KEY, withAnnotation: annotation, andNumberOfPhotos: 40)).responseJSON { (response) in
             guard let json =  response.result.value as? Dictionary<String, AnyObject> else{return}
             let photosDict = json["photos"] as! Dictionary<String, AnyObject>
             let photoDictArray = photosDict["photo"] as! [Dictionary<String, AnyObject>]
@@ -231,10 +231,13 @@ extension MapVC : UICollectionViewDataSource, UICollectionViewDelegate{
         guard let cell:  PhotoCell  = ((collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCell)) else {return UICollectionViewCell()}
         let imageFromIndex = self.imageArray[indexPath.row]
         let imageView = UIImageView(image: imageFromIndex)
-        imageView.clipsToBounds = true
         cell.addSubview(imageView)
         return cell
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let popVC = storyboard?.instantiateViewController(withIdentifier: "PopVC") as? PopVC else {return}
+        popVC.initImage(forImage: self.imageArray[indexPath.row])
+        present(popVC, animated: true, completion: nil)
+    }
 }
