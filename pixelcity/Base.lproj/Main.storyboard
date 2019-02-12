@@ -114,19 +114,31 @@
                                     <constraint firstAttribute="height" constant="25" id="v9J-aY-2VE"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Image Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2jZ-L0-WUO">
+                                <rect key="frame" x="30" y="28" width="315" height="27.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="2jZ-L0-WUO" firstAttribute="top" secondItem="Nu1-4i-tLL" secondAttribute="top" constant="8" id="0gs-J1-kJt"/>
+                            <constraint firstItem="Nu1-4i-tLL" firstAttribute="trailing" secondItem="2jZ-L0-WUO" secondAttribute="trailing" priority="999" constant="30" id="8Zp-2E-iWf"/>
                             <constraint firstItem="ige-tB-Mdt" firstAttribute="leading" secondItem="Nu1-4i-tLL" secondAttribute="leading" id="K0N-1f-rmE"/>
+                            <constraint firstItem="2jZ-L0-WUO" firstAttribute="leading" secondItem="Nu1-4i-tLL" secondAttribute="leading" priority="999" constant="30" id="PRJ-6Z-GvR"/>
                             <constraint firstItem="vaW-e2-MMV" firstAttribute="centerX" secondItem="4nT-pM-ZKC" secondAttribute="centerX" id="TXW-iR-KnB"/>
                             <constraint firstItem="Nu1-4i-tLL" firstAttribute="bottom" secondItem="vaW-e2-MMV" secondAttribute="bottom" constant="20" id="WbJ-Kw-gdF"/>
                             <constraint firstAttribute="bottom" secondItem="ige-tB-Mdt" secondAttribute="bottom" id="Xfd-Dg-GP1"/>
                             <constraint firstItem="ige-tB-Mdt" firstAttribute="top" secondItem="4nT-pM-ZKC" secondAttribute="top" id="cvF-23-vLJ"/>
                             <constraint firstItem="ige-tB-Mdt" firstAttribute="trailing" secondItem="Nu1-4i-tLL" secondAttribute="trailing" id="dlP-CO-Rl1"/>
+                            <constraint firstItem="2jZ-L0-WUO" firstAttribute="centerX" secondItem="4nT-pM-ZKC" secondAttribute="centerX" id="iEp-Ya-pdo"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Nu1-4i-tLL"/>
                     </view>
                     <connections>
+                        <outlet property="imageTitleLbl" destination="2jZ-L0-WUO" id="rLP-W8-Gai"/>
                         <outlet property="popImageView" destination="ige-tB-Mdt" id="QcQ-xV-c8e"/>
                     </connections>
                 </viewController>
